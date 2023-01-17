@@ -128,7 +128,7 @@ export const initDots = async (
     return null;
   }
 
-  const resposne = await fetch(dotsServerUrl[args[1]] + '/v2/payments/public_account_information', {
+  const resposne = await fetch(dotsServerUrl[args[1]] + '/v2/payments/public-account-information', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
