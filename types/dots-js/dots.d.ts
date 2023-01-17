@@ -1,4 +1,4 @@
-export interface Dots {}
+export interface Dots { }
 /**
  * Use `Dots(clientId, options?)` to create an instance of the `Dots` object.
  * The Dots object is your entrypoint to the rest of the Dots.js SDK.
@@ -7,7 +7,7 @@ export interface Dots {}
  *
  */
 
-export interface Tilled {}
+export interface Tilled { }
 
 export interface DotsConstructor {
   (
@@ -19,7 +19,7 @@ export interface DotsConstructor {
     /**
      * Your application environment.
      */
-    environment: 'sandbox' | 'production',
+    environment: 'sandbox' | 'production' | 'development',
 
     /**
      * Initialization options.

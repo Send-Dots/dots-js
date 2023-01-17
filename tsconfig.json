@@ -3,7 +3,6 @@
     "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "esnext",
     "moduleResolution": "node",
-    "noEmit": true,
     "allowJs": false,
     "declaration": false,
     "removeComments": false,
@@ -12,5 +11,5 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src"]
+  "include": ["src", "types"]
 }

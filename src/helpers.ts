@@ -4,7 +4,7 @@ export type LoadDots = (
   ...args: Parameters<DotsConstructor>
 ) => Promise<Dots | null>;
 
-export interface LoadParams {}
+export interface LoadParams { }
 
 // `_VERSION` will be rewritten by `@rollup/plugin-replace` as a string literal
 // containing the package.json version
@@ -14,6 +14,13 @@ const V2_URL = 'https://js.tilled.com/v2';
 const id = 'dots-js-script';
 const EXISTING_SCRIPT_MESSAGE =
   'loadStripe.setLoadParameters was called but an existing Dots.js script already exists in the document; existing script parameters will be used';
+
+const dotsServerUrl = {
+  sandbox: 'https://api.dots.dev/api',
+  production: 'https://api.senddotssanbox.com/api',
+  development: 'http://localhost:8080/api',
+}
+
 
 export const findScript = (): HTMLScriptElement | null => {
   const scripts = document.querySelectorAll<HTMLScriptElement>(
@@ -112,22 +119,27 @@ export const loadScript = (
   return tilledPromise;
 };
 
-export const initDots = (
+export const initDots = async (
   maybeTilled: TilledConstructor | null,
   args: Parameters<DotsConstructor>,
   startTime: number
-): Dots | null => {
+): Promise<Dots | null> => {
   if (maybeTilled === null) {
     return null;
   }
 
-  const { public_key: publicKey, account_id: accountId } = {
-    public_key: 'ac',
-    account_id: 'ac',
-  };
+  const resposne = await fetch(dotsServerUrl[args[1]] + '/v2/payments/public_account_information', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + btoa(args[0] + ':')
+    }
+  })
 
-  const dots = maybeTilled(publicKey, accountId, {
-    sandbox: args[1] === 'sandbox',
+  const { public_key: publicKey, account_id: accountId } = await resposne.json();
+
+  const dots = new (maybeTilled as any)(publicKey, accountId, {
+    sandbox: args[1] === 'sandbox' || args[1] === 'development',
     log_level: 0,
   });
 

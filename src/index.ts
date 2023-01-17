@@ -13,11 +13,11 @@ dotsPromise.catch((err: Error) => {
   }
 });
 
-export const loadDots: LoadDots = (...args) => {
+export const loadDots: LoadDots = async (...args) => {
   loadCalled = true;
   const startTime = Date.now();
 
-  return dotsPromise.then((maybeTilled) =>
-    initDots(maybeTilled, args, startTime)
+  return dotsPromise.then(async (maybeTilled) =>
+    await initDots(maybeTilled, args, startTime)
   );
 };
