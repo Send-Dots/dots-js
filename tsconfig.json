@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "allowJs": false,
+    "declaration": false,
+    "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true /* Enable all strict type-checking options. */,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}
