@@ -1,0 +1,36 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    # tags:
+    #  - "v*"
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+
+    - name: Build
+      run: |
+        npm install
+        npm run build
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Build and commit dots.js
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        automatic_release_tag: "latest"
+        files: |
+          build/dots.js      
