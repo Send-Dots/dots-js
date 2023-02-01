@@ -17,7 +17,7 @@ export const loadDots: LoadDots = async (...args) => {
   loadCalled = true;
   const startTime = Date.now();
 
-  return dotsPromise.then(async (maybeTilled) =>
-    await initDots(maybeTilled, args, startTime)
+  return dotsPromise.then(
+    async (maybeTilled) => await initDots(maybeTilled, args, startTime)
   );
 };
