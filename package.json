@@ -11,14 +11,14 @@
     "webpack-cli": "^5.0.1"
   },
   "name": "@mokin/dots-js",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "main": "dist/dots.js",
   "module": "dist/dots.esm.js",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "prepublishOnly": "npm version patch && npm run build",
+    "prepublishOnly": "npm run build",
     "version": "npm version patch"
   },
   "files": [

@@ -1,5 +1,58 @@
-import { DotsCardElement } from './elements';
+import {
+  DotsCardElement,
+  DotsAddressElement,
+  DotsAddressElementOptions,
+  DotsCardElementOptions,
+  DotsPaymentElement,
+  DotsPaymentElementOptions,
+} from './elements';
 
+export interface DotsElementsUpdateOptions {
+  /**
+   * The [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the locale to display placeholders and error strings in.
+   * Default is `auto` (Stripe detects the locale of the browser).
+   * Setting the locale does not affect the behavior of postal code validation—a valid postal code for the billing country of the card is still required.
+   */
+  locale?: DotsElementLocale;
+
+  /**
+   * Match the design of your site with the appearance option.
+   * The layout of each Element stays consistent, but you can modify colors, fonts, borders, padding, and more.
+   *
+   */
+  appearance?: Appearance;
+}
+export interface DotsElements {
+  /**
+   * Updates the options that `Elements` was initialized with.
+   * Updates are shallowly merged into the existing configuration.
+   */
+  update(options: DotsElementsUpdateOptions): void;
+
+  /**
+   * Fetches updates from the associated PaymentIntent or SetupIntent on an existing
+   * instance of Elements, and reflects these updates in the Payment Element.
+   */
+  fetchUpdates(): Promise<{ error?: { message: string; status?: string } }>;
+
+  /////////////////////////////
+  /// payment
+  /////////////////////////////
+
+  /**
+   * Creates a `PaymentElement`.
+   *
+   */
+  create(
+    elementType: 'payment',
+    options?: DotsPaymentElementOptions
+  ): DotsPaymentElement;
+
+  /**
+   * Looks up a previously created `Element` by its type.
+   */
+  getElement(elementType: 'payment'): DotsPaymentElement | null;
+}
 export type DotsElementType = 'card';
 export type DotsElement = DotsCardElement;
 export interface DotsElementsOptions {
