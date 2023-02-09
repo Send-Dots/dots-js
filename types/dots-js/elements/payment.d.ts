@@ -1,130 +1,8 @@
+import { TilledForm } from '../dots';
+import { Styles } from '../elements-group';
 import { DotsElementBase } from './base';
-import { DotsError } from '../dots';
 
-export type DotsPaymentElement = DotsElementBase & {
-  /**
-   * The change event is triggered when the `Element`'s value changes.
-   */
-  on(
-    eventType: 'change',
-    handler: (event: DotsPaymentElementChangeEvent) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'change',
-    handler: (event: DotsPaymentElementChangeEvent) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'change',
-    handler?: (event: DotsPaymentElementChangeEvent) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the element is fully rendered and can accept `element.focus` calls.
-   */
-  on(
-    eventType: 'ready',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'ready',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'ready',
-    handler?: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the element gains focus.
-   */
-  on(
-    eventType: 'focus',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'focus',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'focus',
-    handler?: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the element loses focus.
-   */
-  on(
-    eventType: 'blur',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'blur',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'blur',
-    handler?: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the escape key is pressed within the element.
-   */
-  on(
-    eventType: 'escape',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'escape',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'escape',
-    handler?: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the element fails to load.
-   */
-  on(
-    eventType: 'loaderror',
-    handler: (event: { elementType: 'payment'; error: DotsError }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'loaderror',
-    handler: (event: { elementType: 'payment'; error: DotsError }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'loaderror',
-    handler?: (event: { elementType: 'payment'; error: DotsError }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Triggered when the loader UI is mounted to the DOM and ready to be displayed.
-   */
-  on(
-    eventType: 'loaderstart',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  once(
-    eventType: 'loaderstart',
-    handler: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-  off(
-    eventType: 'loaderstart',
-    handler?: (event: { elementType: 'payment' }) => any
-  ): DotsPaymentElement;
-
-  /**
-   * Updates the options the `PaymentElement` was initialized with.
-   * Updates are merged into the existing configuration.
-   */
-  update(options: Partial<DotsPaymentElementOptions>): DotsPaymentElement;
-
-  /**
-   * Collapses the Payment Element into a row of payment method tabs.
-   */
-  collapse(): DotsPaymentElement;
-};
+export type DotsPaymentElement = DotsElementBase & TilledForm;
 
 export interface DefaultValuesOption {
   billingDetails?: {
@@ -235,6 +113,7 @@ export interface DotsPaymentElementOptions {
    * Specify a layout to use when rendering a Payment Element.
    */
   layout?: Layout | LayoutObject;
+  styles?: Styles;
 }
 
 export interface DotsPaymentElementChangeEvent {
@@ -252,11 +131,6 @@ export interface DotsPaymentElementChangeEvent {
    * `true` if the every input in the Payment Element is well-formed and potentially complete.
    */
   complete: boolean;
-
-  /**
-   * Whether or not the Payment Element is currently collapsed.
-   */
-  collapsed: boolean;
 
   /**
    * An object containing the currently selected PaymentMethod type (in snake_case, for example "afterpay_clearpay").

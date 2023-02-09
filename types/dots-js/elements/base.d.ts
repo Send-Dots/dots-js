@@ -15,31 +15,30 @@ export type DotsElementBase = {
   mount(domElement: string | HTMLElement): void;
 
   /**
-   * Blurs the element.
-   */
-  blur(): void;
-
-  /**
-   * Clears the value(s) of the element.
-   */
-  clear(): void;
-
-  /**
    * Removes the element from the DOM and destroys it.
    * A destroyed element can not be re-activated or re-mounted to the DOM.
    */
   destroy(): void;
+  //   /**
+  //    * Blurs the element.
+  //    */
+  //   blur(): void;
 
-  /**
-   * Focuses the element.
-   */
-  focus(): void;
+  //   /**
+  //    * Clears the value(s) of the element.
+  //    */
+  //   clear(): void;
 
-  /**
-   * Unmounts the element from the DOM.
-   * Call `element.mount` to re-attach it to the DOM.
-   */
-  unmount(): void;
+  //   /**
+  //    * Focuses the element.
+  //    */
+  //   focus(): void;
+
+  //   /**
+  //    * Unmounts the element from the DOM.
+  //    * Call `element.mount` to re-attach it to the DOM.
+  //    */
+  //   unmount(): void;
 };
 
 /**

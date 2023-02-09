@@ -8,6 +8,7 @@ export interface Dots {
     confirmParams?: Partial<any>;
     redirect: 'if_required';
   }): Promise<any>;
+  form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
 /**
  * Use `Dots(clientId, options?)` to create an instance of the `Dots` object.
@@ -17,6 +18,11 @@ export interface Dots {
  *
  */
 
+export interface TilledForm {
+  createField(field: string, options?: any): any;
+  build(): void;
+  teardown(callback: (success: boolean) => void): void;
+}
 export interface Tilled {}
 
 export interface DotsConstructor {

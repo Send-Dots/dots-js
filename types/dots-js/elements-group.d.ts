@@ -33,7 +33,7 @@ export interface DotsElements {
    * Fetches updates from the associated PaymentIntent or SetupIntent on an existing
    * instance of Elements, and reflects these updates in the Payment Element.
    */
-  fetchUpdates(): Promise<{ error?: { message: string; status?: string } }>;
+  //   fetchUpdates(): Promise<{ error?: { message: string; status?: string } }>;
 
   /////////////////////////////
   /// payment
@@ -46,7 +46,7 @@ export interface DotsElements {
   create(
     elementType: 'payment',
     options?: DotsPaymentElementOptions
-  ): DotsPaymentElement;
+  ): Promise<DotsPaymentElement>;
 
   /**
    * Looks up a previously created `Element` by its type.
@@ -188,6 +188,29 @@ export type DotsElementLocale =
   | 'zh'
   | 'zh-HK'
   | 'zh-TW';
+
+export interface Style {
+  fontFamily?: string;
+  color?: string;
+  fontWeight?: string;
+  fontSize?: string;
+  opacity?: string;
+  letterSpacing?: string;
+  textAlign?: string;
+  textIntent?: string;
+  textDecoration?: string;
+  textShadow?: string;
+  font?: string;
+  fontStyle?: string;
+  lineWeight?: string;
+  transition?: string;
+}
+
+export interface Styles {
+  base?: Style;
+  invalid?: Style;
+  valid?: Style;
+}
 
 export interface Appearance {
   disableAnimations?: boolean;

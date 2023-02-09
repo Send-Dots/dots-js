@@ -1,4 +1,12 @@
-import { Dots, DotsConstructor, TilledConstructor } from '../types';
+import {
+  Dots,
+  DotsConstructor,
+  DotsElements,
+  DotsElementsUpdateOptions,
+  DotsPaymentElement,
+  DotsPaymentElementOptions,
+  TilledConstructor,
+} from '../types';
 
 export type LoadDots = (
   ...args: Parameters<DotsConstructor>
@@ -53,9 +61,10 @@ const injectScript = (params: null | LoadParams): HTMLScriptElement => {
 };
 
 const registerWrapper = (dots: any, startTime: number): void => {
-  if (!dots || !dots._registerWrapper) {
+  if (!dots) {
     return;
   }
+  dots.elements = [];
 
   //dots._registerWrapper({ name: 'dots-js', version: _VERSION, startTime });
 };
@@ -174,3 +183,73 @@ but received
 
   throw new Error(errorMessage);
 };
+
+class Elements implements DotsElements {
+  _elements: any;
+  _dots: Dots;
+  constructor(dots: Dots) {
+    this._elements = {};
+    this._dots = dots;
+  }
+  create(
+    elementType: 'payment',
+    options?: DotsPaymentElementOptions | undefined
+  ): Promise<DotsPaymentElement> {
+    const createPromise = async () => {
+      const form = await this._dots.form({
+        payment_method_type: 'card',
+      });
+
+      const fields: {
+        cardNumber: { id: string; field?: any };
+        cardExpiry: { id: string; field?: any };
+        cardCvv: { id: string; field?: any };
+      } = {
+        cardNumber: {
+          id: '#card-number-element',
+        },
+        cardExpiry: { id: '#card-expiration-element' },
+        cardCvv: { id: '#card-cvv-element' },
+      };
+
+      Object.entries(fields).forEach((entry) => {
+        const [fieldName, fieldElement] = entry;
+        const formField = form.createField(
+          fieldName,
+          options?.styles ? options.styles : {}
+        );
+        fieldElement.field = formField;
+      });
+
+      const paymentElement: DotsPaymentElement = {
+        ...form,
+        mount: () => {
+          Object.entries(fields).forEach((entry) => {
+            const [_, fieldElement] = entry;
+            fieldElement.field.inject(fieldElement.id);
+          });
+          form.build();
+        },
+        destroy: () => {
+          form.teardown((success) => {
+            console.log(
+              'The component has been successfully unmounted:',
+              success
+            );
+          });
+        },
+      };
+      this._elements[elementType] = paymentElement;
+      return paymentElement;
+    };
+
+    return createPromise();
+  }
+  update(options: DotsElementsUpdateOptions): void {
+    //to do
+  }
+
+  getElement(elementType: 'payment'): DotsPaymentElement | null {
+    return this._elements[elementType] || null;
+  }
+}
