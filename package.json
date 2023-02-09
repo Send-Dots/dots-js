@@ -17,7 +17,7 @@
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run version && rollup -c",
     "prepublishOnly": "npm run build",
     "version": "npm version patch"
   },
