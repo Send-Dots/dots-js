@@ -12,7 +12,7 @@ export type DotsElementBase = {
    * 1. Mount the instance within a `<label>`.
    * 2. Create a `<label>` with a `for` attribute, referencing the ID of your container.
    */
-  mount(domElement: string | HTMLElement): void;
+  mount(fieldIds: any): void;
 
   /**
    * Removes the element from the DOM and destroys it.

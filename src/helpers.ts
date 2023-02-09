@@ -5,6 +5,7 @@ import {
   DotsElementsUpdateOptions,
   DotsPaymentElement,
   DotsPaymentElementOptions,
+  FieldNameTypes,
   TilledConstructor,
 } from '../types';
 
@@ -64,7 +65,7 @@ const registerWrapper = (dots: any, startTime: number): void => {
   if (!dots) {
     return;
   }
-  dots.elements = [];
+  dots.elements = new Elements(dots);
 
   //dots._registerWrapper({ name: 'dots-js', version: _VERSION, startTime });
 };
@@ -200,34 +201,54 @@ class Elements implements DotsElements {
         payment_method_type: 'card',
       });
 
-      const fields: {
-        cardNumber: { id: string; field?: any };
-        cardExpiry: { id: string; field?: any };
-        cardCvv: { id: string; field?: any };
-      } = {
-        cardNumber: {
-          id: '#card-number-element',
-        },
-        cardExpiry: { id: '#card-expiration-element' },
-        cardCvv: { id: '#card-cvv-element' },
-      };
+      const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'] as const;
 
-      Object.entries(fields).forEach((entry) => {
-        const [fieldName, fieldElement] = entry;
+      const fields: { name: FieldNameTypes; formField: any }[] = [];
+      fieldNames.forEach((fieldName) => {
         const formField = form.createField(
           fieldName,
           options?.styles ? options.styles : {}
         );
-        fieldElement.field = formField;
+        fields.push({ formField: formField, name: fieldName });
       });
 
       const paymentElement: DotsPaymentElement = {
         ...form,
-        mount: () => {
-          Object.entries(fields).forEach((entry) => {
-            const [_, fieldElement] = entry;
-            fieldElement.field.inject(fieldElement.id);
+        mount: (fieldIds: {
+          [key in FieldNameTypes]: string;
+        }) => {
+          fields.forEach((field) => {
+            const id = fieldIds[field.name];
+            field.formField.inject(id);
           });
+          // update card brand
+          if (document.getElementById('card-brand-icon')) {
+            form.fields.cardNumber.on('change', (evt: any) => {
+              const cardBrand = evt.brand;
+              const icon = document.getElementById('card-brand-icon');
+              if (icon) {
+                switch (cardBrand) {
+                  case 'amex':
+                    icon.classList.value = 'fa fa-cc-amex';
+                    break;
+                  case 'mastercard':
+                    icon.classList.value = 'fa fa-cc-mastercard';
+                    break;
+                  case 'visa':
+                    icon.classList.value = 'fa fa-cc-visa';
+                    break;
+                  case 'discover':
+                    icon.classList.value = 'fa fa-cc-discover';
+                    break;
+                  case 'diners':
+                    icon.classList.value = 'fa fa-cc-diners-club';
+                    break;
+                  default:
+                    icon.classList.value = '';
+                }
+              }
+            });
+          }
           form.build();
         },
         destroy: () => {

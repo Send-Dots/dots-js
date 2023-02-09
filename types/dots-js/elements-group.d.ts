@@ -53,8 +53,8 @@ export interface DotsElements {
    */
   getElement(elementType: 'payment'): DotsPaymentElement | null;
 }
-export type DotsElementType = 'card';
-export type DotsElement = DotsCardElement;
+export type DotsElementType = 'payment' | 'card';
+export type DotsElement = DotsCardElement | DotsPaymentElement;
 export interface DotsElementsOptions {
   /**
    * An array of custom fonts, which elements created from the `Elements` object can use.

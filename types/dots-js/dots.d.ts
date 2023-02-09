@@ -21,6 +21,7 @@ export interface Dots {
 export interface TilledForm {
   createField(field: string, options?: any): any;
   build(): void;
+  fields: any;
   teardown(callback: (success: boolean) => void): void;
 }
 export interface Tilled {}

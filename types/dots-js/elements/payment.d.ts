@@ -2,7 +2,12 @@ import { TilledForm } from '../dots';
 import { Styles } from '../elements-group';
 import { DotsElementBase } from './base';
 
-export type DotsPaymentElement = DotsElementBase & TilledForm;
+export type FieldNameTypes = 'cardNumber' | 'cardExpiry' | 'cardCvv';
+
+export type DotsPaymentElement = DotsElementBase &
+  TilledForm & {
+    mount(fieldIds: { [key in FieldNameTypes]: string }): void;
+  };
 
 export interface DefaultValuesOption {
   billingDetails?: {
