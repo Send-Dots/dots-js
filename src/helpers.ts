@@ -12,7 +12,7 @@ export type LoadDots = (
   ...args: Parameters<DotsConstructor>
 ) => Promise<Dots | null>;
 
-export interface LoadParams {}
+export interface LoadParams { }
 
 // `_VERSION` will be rewritten by `@rollup/plugin-replace` as a string literal
 // containing the package.json version
@@ -26,6 +26,7 @@ const EXISTING_SCRIPT_MESSAGE =
 const dotsServerUrl = {
   sandbox: 'https://api.dots.dev/api',
   production: 'https://api.senddotssanbox.com/api',
+  staging: 'https://api-staging.dots.dev/api',
   development: 'http://localhost:8080/api',
 };
 
