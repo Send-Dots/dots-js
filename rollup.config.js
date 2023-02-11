@@ -1,15 +1,15 @@
-import babel from 'rollup-plugin-babel';
-import ts from 'rollup-plugin-typescript2';
-import replace from '@rollup/plugin-replace';
+import babel from "rollup-plugin-babel";
+import ts from "rollup-plugin-typescript2";
+import replace from "@rollup/plugin-replace";
 
-import pkg from './package.json';
+import pkg from "./package.json";
 
 const PLUGINS = [
   ts({
-    tsconfigOverride: { exclude: ['**/*.test.ts'] },
+    tsconfigOverride: { exclude: ["**/*.test.ts"] },
   }),
   babel({
-    extensions: ['.ts', '.js', '.tsx', '.jsx'],
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
   }),
   replace({
     _VERSION: JSON.stringify(pkg.version),
@@ -18,10 +18,11 @@ const PLUGINS = [
 
 export default [
   {
-    input: 'src/index.ts',
+    input: "src/index.ts",
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' },
+      { file: pkg.main, format: "cjs" },
+      { file: pkg.module, format: "es" },
+      { file: "build/dots.js", name: "dotsjs", format: "iife" },
     ],
     plugins: PLUGINS,
   },
