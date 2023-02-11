@@ -2,8 +2,8 @@ const V2_URL = 'https://js.tilled.com/v2';
 const id = 'dots-js-script';
 const EXISTING_SCRIPT_MESSAGE = 'loadDots.setLoadParameters was called but an existing Dots.js script already exists in the document; existing script parameters will be used';
 const dotsServerUrl = {
-  sandbox: 'https://api.dots.dev/api',
-  production: 'https://api.senddotssanbox.com/api',
+  production: 'https://api.dots.dev/api',
+  sandbox: 'https://api.senddotssanbox.com/api',
   staging: 'https://api-staging.dots.dev/api',
   development: 'http://localhost:8080/api'
 };
