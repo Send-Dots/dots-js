@@ -1,11 +1,14 @@
 import {
+  ConfirmPayment,
   Dots,
   DotsConstructor,
+  DotsElement,
   DotsElements,
   DotsElementsUpdateOptions,
   DotsPaymentElement,
   DotsPaymentElementOptions,
   FieldNameTypes,
+  PaymentMethod,
   TilledConstructor,
 } from '../types';
 
@@ -65,8 +68,20 @@ const registerWrapper = (dots: any, startTime: number): void => {
   if (!dots) {
     return;
   }
-  dots.elements = new Elements(dots);
+  dots.elements = () => new Elements(dots);
+  const confirmPayment = dots.confirmPayment;
+  const wrapper: ConfirmPayment = (
+    client_secret: string,
+    payment_method: PaymentMethod
+  ) => {
+    return confirmPayment(client_secret, {
+      type: 'card',
+      ...payment_method,
+      form: payment_method.element,
+    });
+  };
 
+  dots.confirmPayment = wrapper;
   //dots._registerWrapper({ name: 'dots-js', version: _VERSION, startTime });
 };
 
@@ -205,10 +220,7 @@ class Elements implements DotsElements {
 
       const fields: { name: FieldNameTypes; formField: any }[] = [];
       fieldNames.forEach((fieldName) => {
-        const formField = form.createField(
-          fieldName,
-          options?.styles ? options.styles : {}
-        );
+        const formField = form.createField(fieldName, options);
         fields.push({ formField: formField, name: fieldName });
       });
 

@@ -1,15 +1,37 @@
-import { DotsElements, DotsElementsOptions } from './elements-group';
+import {
+  DotsElement,
+  DotsElements,
+  DotsElementsOptions,
+} from './elements-group';
 
 export interface Dots {
   elements(options?: DotsElementsOptions): DotsElements;
 
-  confirmPayment(options: {
-    elements: DotsElements;
-    confirmParams?: Partial<any>;
-    redirect: 'if_required';
-  }): Promise<any>;
+  confirmPayment: ConfirmPayment;
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
+
+export type ConfirmPayment = (
+  client_secret: string,
+
+  payment_method: PaymentMethod
+) => Promise<any>;
+
+export type PaymentMethod = {
+  element: DotsElement;
+  billing_details: {
+    name?: string;
+    email?: string;
+    address: {
+      country: string;
+      zip: string;
+      street?: string;
+      city?: string;
+      state?: string;
+    };
+  };
+};
+
 /**
  * Use `Dots(clientId, options?)` to create an instance of the `Dots` object.
  * The Dots object is your entrypoint to the rest of the Dots.js SDK.
