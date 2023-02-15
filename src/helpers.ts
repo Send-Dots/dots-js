@@ -241,22 +241,22 @@ class Elements implements DotsElements {
               if (icon) {
                 switch (cardBrand) {
                   case 'amex':
-                    icon.classList.value = 'fa fa-cc-amex';
+                    icon.classList.value = 'fa-brands fa-cc-amex';
                     break;
                   case 'mastercard':
-                    icon.classList.value = 'fa fa-cc-mastercard';
+                    icon.classList.value = 'fa-brands fa-cc-mastercard';
                     break;
                   case 'visa':
-                    icon.classList.value = 'fa fa-cc-visa';
+                    icon.classList.value = 'fa-brands fa-cc-visa';
                     break;
                   case 'discover':
-                    icon.classList.value = 'fa fa-cc-discover';
+                    icon.classList.value = 'fa-brands fa-cc-discover';
                     break;
                   case 'diners':
-                    icon.classList.value = 'fa fa-cc-diners-club';
+                    icon.classList.value = 'fa-brands fa-cc-diners-club';
                     break;
                   default:
-                    icon.classList.value = '';
+                    icon.classList.value = 'fa-solid fa-credit-card';
                 }
               }
             });
