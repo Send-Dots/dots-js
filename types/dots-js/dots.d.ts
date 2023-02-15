@@ -7,7 +7,7 @@ import {
 export interface Dots {
   elements(options?: DotsElementsOptions): DotsElements;
 
-  confirmPayment: ConfirmPayment;
+  confirmCardPayment: ConfirmCardPayment;
   // createPaymentMethod: CreatePaymentMethod;
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
@@ -30,7 +30,7 @@ export type CreatePaymentMethod = (
   }
 ) => Promise<any>;
 
-export type ConfirmPayment = (
+export type ConfirmCardPayment = (
   client_secret: string,
   options: {
     payment_method: PaymentMethod;

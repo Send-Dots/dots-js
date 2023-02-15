@@ -33,8 +33,17 @@ var dotsjs = (function (exports) {
     if (!dots) {
       return;
     }
-    dots.elements = [];
-    //dots._registerWrapper({ name: 'dots-js', version: "1.0.9", startTime });
+    dots.elements = () => new Elements(dots);
+    dots.confirmCardPayment = (client_secret, options) => {
+      return dots.confirmPayment(client_secret, {
+        payment_method: {
+          type: 'card',
+          ...options.payment_method,
+          form: options.payment_method.element.form
+        }
+      });
+    };
+    //dots._registerWrapper({ name: 'dots-js', version: "1.0.28", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
@@ -102,6 +111,82 @@ var dotsjs = (function (exports) {
     registerWrapper(dots);
     return dots;
   };
+  class Elements {
+    _elements;
+    _dots;
+    constructor(dots) {
+      this._elements = {};
+      this._dots = dots;
+    }
+    create(elementType, options) {
+      const createPromise = async () => {
+        const form = await this._dots.form({
+          payment_method_type: 'card'
+        });
+        const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'];
+        const fields = [];
+        fieldNames.forEach(fieldName => {
+          const formField = form.createField(fieldName, options);
+          fields.push({
+            formField: formField,
+            name: fieldName
+          });
+        });
+        const paymentElement = {
+          form,
+          mount: fieldIds => {
+            fields.forEach(field => {
+              const id = fieldIds[field.name];
+              field.formField.inject(id);
+            });
+            // update card brand
+            if (document.getElementById('card-brand-icon')) {
+              form.fields.cardNumber.on('change', evt => {
+                const cardBrand = evt.brand;
+                const icon = document.getElementById('card-brand-icon');
+                if (icon) {
+                  switch (cardBrand) {
+                    case 'amex':
+                      icon.classList.value = 'fa fa-cc-amex';
+                      break;
+                    case 'mastercard':
+                      icon.classList.value = 'fa fa-cc-mastercard';
+                      break;
+                    case 'visa':
+                      icon.classList.value = 'fa fa-cc-visa';
+                      break;
+                    case 'discover':
+                      icon.classList.value = 'fa fa-cc-discover';
+                      break;
+                    case 'diners':
+                      icon.classList.value = 'fa fa-cc-diners-club';
+                      break;
+                    default:
+                      icon.classList.value = '';
+                  }
+                }
+              });
+            }
+            form.build();
+          },
+          destroy: () => {
+            form.teardown(success => {
+              console.log('The component has been successfully unmounted:', success);
+            });
+          }
+        };
+        this._elements[elementType] = paymentElement;
+        return paymentElement;
+      };
+      return createPromise();
+    }
+    update(options) {
+      //to do
+    }
+    getElement(elementType) {
+      return this._elements[elementType] || null;
+    }
+  }
 
   // Execute our own script injection after a tick to give users time to do their
   // own script injection.

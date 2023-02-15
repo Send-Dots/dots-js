@@ -11,7 +11,7 @@
     "webpack-cli": "^5.0.1"
   },
   "name": "@mokin/dots-js",
-  "version": "1.0.27",
+  "version": "1.0.29",
   "main": "dist/dots.js",
   "module": "dist/dots.esm.js",
   "types": "types/index.d.ts",

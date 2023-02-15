@@ -1,5 +1,4 @@
 import {
-  ConfirmPayment,
   Dots,
   DotsConstructor,
   DotsElement,
@@ -16,7 +15,7 @@ export type LoadDots = (
   ...args: Parameters<DotsConstructor>
 ) => Promise<Dots | null>;
 
-export interface LoadParams { }
+export interface LoadParams {}
 
 // `_VERSION` will be rewritten by `@rollup/plugin-replace` as a string literal
 // containing the package.json version
@@ -70,12 +69,11 @@ const registerWrapper = (dots: any, startTime: number): void => {
     return;
   }
   dots.elements = () => new Elements(dots);
-  const confirmPayment = dots.confirmPayment;
-  dots.confirmPayment = (
+  dots.confirmCardPayment = (
     client_secret: string,
     options: { payment_method: PaymentMethod }
   ) => {
-    return confirmPayment(client_secret, {
+    return dots.confirmPayment(client_secret, {
       payment_method: {
         type: 'card',
         ...options.payment_method,
