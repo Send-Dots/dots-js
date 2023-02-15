@@ -1,3 +1,4 @@
+import { TilledForm } from '../dots';
 import {
   DotsElementBase,
   DotsElementStyle,
@@ -6,6 +7,7 @@ import {
 } from './base';
 
 export type DotsCardElement = DotsElementBase & {
+  form: TilledForm;
   /**
    * The change event is triggered when the `Element`'s value changes.
    */

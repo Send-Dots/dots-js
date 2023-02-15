@@ -70,18 +70,19 @@ const registerWrapper = (dots: any, startTime: number): void => {
   }
   dots.elements = () => new Elements(dots);
   const confirmPayment = dots.confirmPayment;
-  const wrapper: ConfirmPayment = (
+  dots.confirmPayment = (
     client_secret: string,
-    payment_method: PaymentMethod
+    options: { payment_method: PaymentMethod }
   ) => {
     return confirmPayment(client_secret, {
-      type: 'card',
-      ...payment_method,
-      form: payment_method.element,
+      payment_method: {
+        type: 'card',
+        ...options.payment_method,
+        form: options.payment_method.element.form,
+      },
     });
   };
 
-  dots.confirmPayment = wrapper;
   //dots._registerWrapper({ name: 'dots-js', version: _VERSION, startTime });
 };
 
@@ -225,7 +226,7 @@ class Elements implements DotsElements {
       });
 
       const paymentElement: DotsPaymentElement = {
-        ...form,
+        form,
         mount: (fieldIds: {
           [key in FieldNameTypes]: string;
         }) => {

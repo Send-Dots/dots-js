@@ -8,13 +8,33 @@ export interface Dots {
   elements(options?: DotsElementsOptions): DotsElements;
 
   confirmPayment: ConfirmPayment;
+  // createPaymentMethod: CreatePaymentMethod;
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
+export type CreatePaymentMethod = (
+  client_secret: string,
+  options: {
+    payment_method: {
+      billing_details: {
+        name?: string;
+        email?: string;
+        address: {
+          country: string;
+          zip: string;
+          street?: string;
+          city?: string;
+          state?: string;
+        };
+      };
+    };
+  }
+) => Promise<any>;
 
 export type ConfirmPayment = (
   client_secret: string,
-
-  payment_method: PaymentMethod
+  options: {
+    payment_method: PaymentMethod;
+  }
 ) => Promise<any>;
 
 export type PaymentMethod = {

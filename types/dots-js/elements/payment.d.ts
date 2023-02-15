@@ -4,10 +4,10 @@ import { DotsElementBase } from './base';
 
 export type FieldNameTypes = 'cardNumber' | 'cardExpiry' | 'cardCvv';
 
-export type DotsPaymentElement = DotsElementBase &
-  TilledForm & {
-    mount(fieldIds: { [key in FieldNameTypes]: string }): void;
-  };
+export type DotsPaymentElement = DotsElementBase & {
+  form: TilledForm;
+  mount(fieldIds: { [key in FieldNameTypes]: string }): void;
+};
 
 export interface DefaultValuesOption {
   billingDetails?: {
