@@ -29,7 +29,10 @@
     "types"
   ],
   "keywords": [],
-  "author": "",
+  "author": "info@dots.dev",
   "license": "ISC",
-  "description": ""
+  "description": "A dots.js loader utility",
+  "publishConfig": {
+    "access": "public"
+  }
 }
