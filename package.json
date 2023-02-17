@@ -12,7 +12,7 @@
     "rimraf": "^4.1.2"
   },
   "name": "@dots.dev/dots-js",
-  "version": "1.0.32",
+  "version": "1.1.0",
   "main": "dist/dots.js",
   "module": "dist/dots.esm.js",
   "types": "types/index.d.ts",
@@ -29,7 +29,10 @@
     "types"
   ],
   "keywords": [],
-  "author": "",
+  "author": "info@dots.dev",
   "license": "ISC",
-  "description": ""
+  "description": "A dots.js loader utility",
+  "publishConfig": {
+    "access": "public"
+  }
 }
