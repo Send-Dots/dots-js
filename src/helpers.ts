@@ -231,10 +231,14 @@ class Elements implements DotsElements {
         }) => {
           fields.forEach((field) => {
             const id = fieldIds[field.name];
-            field.formField.inject(id);
+            field.formField.inject('#' + id);
             field.formField.on('focus', (evt: any) => {
               const parentDiv = document.getElementById(id);
-              parentDiv?.focus();
+              if (parentDiv) parentDiv.classList.add('parent-focused');
+            });
+            field.formField.on('blur', (evt: any) => {
+              const parentDiv = document.getElementById(id);
+              if (parentDiv) parentDiv.classList.remove('parent-focused');
             });
           });
           // update card brand

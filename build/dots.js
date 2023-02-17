@@ -43,7 +43,7 @@ var dotsjs = (function (exports) {
         }
       });
     };
-    //dots._registerWrapper({ name: 'dots-js', version: "1.0.32", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.6", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
@@ -137,7 +137,15 @@ var dotsjs = (function (exports) {
           mount: fieldIds => {
             fields.forEach(field => {
               const id = fieldIds[field.name];
-              field.formField.inject(id);
+              field.formField.inject('#' + id);
+              field.formField.on('focus', evt => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.add('parent-focused');
+              });
+              field.formField.on('blur', evt => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.remove('parent-focused');
+              });
             });
             // update card brand
             if (document.getElementById('card-brand-icon')) {
