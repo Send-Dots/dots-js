@@ -232,6 +232,10 @@ class Elements implements DotsElements {
           fields.forEach((field) => {
             const id = fieldIds[field.name];
             field.formField.inject(id);
+            field.formField.on('focus', (evt: any) => {
+              const parentDiv = document.getElementById(id);
+              parentDiv?.focus();
+            });
           });
           // update card brand
           if (document.getElementById('card-brand-icon')) {
@@ -261,6 +265,7 @@ class Elements implements DotsElements {
               }
             });
           }
+
           form.build();
         },
         destroy: () => {
