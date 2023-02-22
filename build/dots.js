@@ -29,21 +29,31 @@ var dotsjs = (function (exports) {
     headOrBody.appendChild(script);
     return script;
   };
-  const registerWrapper = (dots, startTime) => {
+  const registerWrapper = (dots, args) => {
     if (!dots) {
       return;
     }
     dots.elements = () => new Elements(dots);
-    dots.confirmCardPayment = (client_secret, options) => {
-      return dots.confirmPayment(client_secret, {
-        payment_method: {
+    const confirmCardPayment = async (client_secret, options) => {
+      const res = await dots.confirmPayment(client_secret, {
+        payment_method: typeof options.payment_method === 'string' ? options.payment_method : {
           type: 'card',
           ...options.payment_method,
           form: options.payment_method.element.form
         }
       });
+      const clientSecret = res['client_secret'];
+      const resposne = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange' + clientSecret, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Basic ' + btoa(args[0] + ':')
+        }
+      });
+      return resposne.json();
     };
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.6", startTime });
+    dots.confirmCardPayment = confirmCardPayment;
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.7", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
@@ -93,7 +103,8 @@ var dotsjs = (function (exports) {
     if (maybeTilled === null) {
       return null;
     }
-    const resposne = await fetch(dotsServerUrl[args[1]] + '/tilled-public-account-information', {
+    const environment = args[1];
+    const resposne = await fetch(dotsServerUrl[environment] + '/tilled-public-account-information', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -105,10 +116,10 @@ var dotsjs = (function (exports) {
       account_id: accountId
     } = await resposne.json();
     const dots = new maybeTilled(publicKey, accountId, {
-      sandbox: args[1] === 'sandbox' || args[1] === 'development',
+      sandbox: environment === 'sandbox' || environment === 'development',
       log_level: 0
     });
-    registerWrapper(dots);
+    registerWrapper(dots, args);
     return dots;
   };
   class Elements {
