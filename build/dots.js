@@ -43,17 +43,20 @@ var dotsjs = (function (exports) {
         }
       });
       const clientSecret = res['client_secret'];
-      const resposne = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange' + clientSecret, {
+      const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange/' + clientSecret, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Basic ' + btoa(args[0] + ':')
         }
       });
-      return resposne.json();
+      if (!response.ok) {
+        throw new Error('Failed to exchange client secret');
+      }
+      return response.json();
     };
     dots.confirmCardPayment = confirmCardPayment;
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.7", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.8", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {

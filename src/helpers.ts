@@ -90,8 +90,8 @@ const registerWrapper = (
 
     const clientSecret = res['client_secret'];
 
-    const resposne = await fetch(
-      dotsServerUrl[args[1]] + '/v2/payment-intents/exchange' + clientSecret,
+    const response = await fetch(
+      dotsServerUrl[args[1]] + '/v2/payment-intents/exchange/' + clientSecret,
       {
         method: 'GET',
         headers: {
@@ -100,8 +100,11 @@ const registerWrapper = (
         },
       }
     );
+    if (!response.ok) {
+      throw new Error('Failed to exchange client secret');
+    }
 
-    return resposne.json();
+    return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
 
