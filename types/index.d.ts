@@ -1,5 +1,6 @@
 import { Dots } from './dots-js';
 
+export * from './api';
 export * from './dots-js';
 
 export const loadDots: (

@@ -6,6 +6,10 @@ import {
   DotsPaymentElement,
   DotsPaymentElementOptions,
 } from './elements';
+import {
+  DotsPaymentRequestButtonElement,
+  DotsPaymentRequestButtonElementOptions,
+} from './elements/payment-request-button';
 
 export interface DotsElementsUpdateOptions {
   /**
@@ -52,9 +56,29 @@ export interface DotsElements {
    * Looks up a previously created `Element` by its type.
    */
   getElement(elementType: 'payment'): DotsPaymentElement | null;
+
+  /////////////////////////////
+  /// paymentRequestButton
+  /////////////////////////////
+
+  /**
+   * Creates a `PaymentRequestButtonElement`.
+   *
+   */
+  create(
+    elementType: 'paymentRequestButton',
+    options: DotsPaymentRequestButtonElementOptions
+  ): Promise<DotsPaymentRequestButtonElement>;
+
+  /**
+   * Looks up a previously created `Element` by its type.
+   */
+  getElement(
+    elementType: 'paymentRequestButton'
+  ): DotsPaymentRequestButtonElement | null;
 }
-export type DotsElementType = 'payment' | 'card';
-export type DotsElement = DotsCardElement | DotsPaymentElement;
+export type DotsElementType = 'payment' | 'paymentRequestButton';
+export type DotsElement = DotsPaymentElement | DotsPaymentRequestButtonElement;
 export interface DotsElementsOptions {
   /**
    * An array of custom fonts, which elements created from the `Elements` object can use.

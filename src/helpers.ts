@@ -2,6 +2,7 @@ import {
   Dots,
   DotsConstructor,
   DotsElement,
+  DotsElementType,
   DotsElements,
   DotsElementsUpdateOptions,
   DotsPaymentElement,
@@ -10,6 +11,10 @@ import {
   PaymentMethod,
   TilledConstructor,
 } from '../types';
+import {
+  DotsPaymentRequestButtonElement,
+  DotsPaymentRequestButtonElementOptions,
+} from '../types/dots-js/elements/payment-request-button';
 
 export type LoadDots = (
   ...args: Parameters<DotsConstructor>
@@ -236,90 +241,138 @@ class Elements implements DotsElements {
     this._dots = dots;
   }
   create(
-    elementType: 'payment',
-    options?: DotsPaymentElementOptions | undefined
-  ): Promise<DotsPaymentElement> {
-    const createPromise = async () => {
-      const form = await this._dots.form({
-        payment_method_type: 'card',
-      });
+    elementType: DotsElementType,
+    options?:
+      | DotsPaymentElementOptions
+      | DotsPaymentRequestButtonElementOptions
+      | undefined
+  ): Promise<DotsElement> {
+    if (elementType === 'payment') {
+      const createPromise = async () => {
+        const form = await this._dots.form({
+          payment_method_type: 'card',
+        });
 
-      const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'] as const;
+        const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'] as const;
 
-      const fields: { name: FieldNameTypes; formField: any }[] = [];
-      fieldNames.forEach((fieldName) => {
-        const formField = form.createField(fieldName, options);
-        fields.push({ formField: formField, name: fieldName });
-      });
+        const fields: { name: FieldNameTypes; formField: any }[] = [];
+        fieldNames.forEach((fieldName) => {
+          const formField = form.createField(fieldName, options);
+          fields.push({ formField: formField, name: fieldName });
+        });
 
-      const paymentElement: DotsPaymentElement = {
-        form,
-        mount: (fieldIds: {
-          [key in FieldNameTypes]: string;
-        }) => {
-          fields.forEach((field) => {
-            const id = fieldIds[field.name];
-            field.formField.inject('#' + id);
-            field.formField.on('focus', (evt: any) => {
-              const parentDiv = document.getElementById(id);
-              if (parentDiv) parentDiv.classList.add('parent-focused');
+        const paymentElement: DotsPaymentElement = {
+          form,
+          mount: (fieldIds: {
+            [key in FieldNameTypes]: string;
+          }) => {
+            fields.forEach((field) => {
+              const id = fieldIds[field.name];
+              field.formField.inject('#' + id);
+              field.formField.on('focus', (evt: any) => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.add('parent-focused');
+              });
+              field.formField.on('blur', (evt: any) => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.remove('parent-focused');
+              });
             });
-            field.formField.on('blur', (evt: any) => {
-              const parentDiv = document.getElementById(id);
-              if (parentDiv) parentDiv.classList.remove('parent-focused');
-            });
-          });
-          // update card brand
-          if (document.getElementById('card-brand-icon')) {
-            form.fields.cardNumber.on('change', (evt: any) => {
-              const cardBrand = evt.brand;
-              const icon = document.getElementById('card-brand-icon');
-              if (icon) {
-                switch (cardBrand) {
-                  case 'amex':
-                    icon.classList.value = 'fa-brands fa-cc-amex';
-                    break;
-                  case 'mastercard':
-                    icon.classList.value = 'fa-brands fa-cc-mastercard';
-                    break;
-                  case 'visa':
-                    icon.classList.value = 'fa-brands fa-cc-visa';
-                    break;
-                  case 'discover':
-                    icon.classList.value = 'fa-brands fa-cc-discover';
-                    break;
-                  case 'diners':
-                    icon.classList.value = 'fa-brands fa-cc-diners-club';
-                    break;
-                  default:
-                    icon.classList.value = 'fa-solid fa-credit-card';
+            // update card brand
+            if (document.getElementById('card-brand-icon')) {
+              form.fields.cardNumber.on('change', (evt: any) => {
+                const cardBrand = evt.brand;
+                const icon = document.getElementById('card-brand-icon');
+                if (icon) {
+                  switch (cardBrand) {
+                    case 'amex':
+                      icon.classList.value = 'fa-brands fa-cc-amex';
+                      break;
+                    case 'mastercard':
+                      icon.classList.value = 'fa-brands fa-cc-mastercard';
+                      break;
+                    case 'visa':
+                      icon.classList.value = 'fa-brands fa-cc-visa';
+                      break;
+                    case 'discover':
+                      icon.classList.value = 'fa-brands fa-cc-discover';
+                      break;
+                    case 'diners':
+                      icon.classList.value = 'fa-brands fa-cc-diners-club';
+                      break;
+                    default:
+                      icon.classList.value = 'fa-solid fa-credit-card';
+                  }
                 }
+              });
+            }
+
+            form.build();
+          },
+          destroy: () => {
+            form.teardown((success) => {
+              console.log(
+                'The component has been successfully unmounted:',
+                success
+              );
+            });
+          },
+        };
+        this._elements[elementType] = paymentElement;
+        return paymentElement;
+      };
+      return createPromise();
+    } else if (
+      elementType === 'paymentRequestButton' &&
+      options &&
+      'paymentRequest' in options
+    ) {
+      const createPromise = async () => {
+        const form = await this._dots.form({
+          payment_method_type: 'card',
+        });
+
+        var prButton = form.createField('paymentRequestButton', {
+          paymentRequest: options.paymentRequest,
+        });
+
+        const paymentRequestButtonElement: DotsPaymentRequestButtonElement = {
+          form,
+          mount: (selectorId: string) => {
+            options.paymentRequest.canMakePayment().then((result) => {
+              if (result) {
+                // Inject paymentRequestButton Form Field to the DOM
+                prButton.inject(selectorId);
+              } else {
+                const button = document.getElementById(selectorId);
+                if (button) button.style.display = 'none';
               }
             });
-          }
 
-          form.build();
-        },
-        destroy: () => {
-          form.teardown((success) => {
-            console.log(
-              'The component has been successfully unmounted:',
-              success
-            );
-          });
-        },
+            form.build();
+          },
+          destroy: () => {
+            form.teardown((success) => {
+              console.log(
+                'The component has been successfully unmounted:',
+                success
+              );
+            });
+          },
+        };
+        this._elements[elementType] = paymentRequestButtonElement;
+        return paymentRequestButtonElement;
       };
-      this._elements[elementType] = paymentElement;
-      return paymentElement;
-    };
-
-    return createPromise();
+      return createPromise();
+    } else {
+      return Promise.reject(new Error('Invalid type'));
+    }
   }
   update(options: DotsElementsUpdateOptions): void {
     //to do
   }
 
-  getElement(elementType: 'payment'): DotsPaymentElement | null {
+  getElement(elementType: DotsElementType): DotsElement | null {
     return this._elements[elementType] || null;
   }
 }

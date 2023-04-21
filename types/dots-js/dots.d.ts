@@ -3,7 +3,7 @@ import {
   DotsElements,
   DotsElementsOptions,
 } from './elements-group';
-
+import * as api from '../api';
 export interface Dots {
   elements(options?: DotsElementsOptions): DotsElements;
 
@@ -33,24 +33,9 @@ export type CreatePaymentMethod = (
 export type ConfirmCardPayment = (
   client_secret: string,
   options: {
-    payment_method: PaymentMethod;
+    payment_method: api.PaymentMethod;
   }
 ) => Promise<any>;
-
-export type PaymentMethod = {
-  element: DotsElement;
-  billing_details: {
-    name?: string;
-    email?: string;
-    address: {
-      country: string;
-      zip: string;
-      street?: string;
-      city?: string;
-      state?: string;
-    };
-  };
-};
 
 /**
  * Use `Dots(clientId, options?)` to create an instance of the `Dots` object.
