@@ -53,7 +53,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.8", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.9", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
@@ -130,74 +130,110 @@ class Elements {
     this._dots = dots;
   }
   create(elementType, options) {
-    const createPromise = async () => {
-      const form = await this._dots.form({
-        payment_method_type: 'card'
-      });
-      const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'];
-      const fields = [];
-      fieldNames.forEach(fieldName => {
-        const formField = form.createField(fieldName, options);
-        fields.push({
-          formField: formField,
-          name: fieldName
+    if (elementType === 'payment') {
+      const createPromise = async () => {
+        const form = await this._dots.form({
+          payment_method_type: 'card'
         });
-      });
-      const paymentElement = {
-        form,
-        mount: fieldIds => {
-          fields.forEach(field => {
-            const id = fieldIds[field.name];
-            field.formField.inject('#' + id);
-            field.formField.on('focus', evt => {
-              const parentDiv = document.getElementById(id);
-              if (parentDiv) parentDiv.classList.add('parent-focused');
-            });
-            field.formField.on('blur', evt => {
-              const parentDiv = document.getElementById(id);
-              if (parentDiv) parentDiv.classList.remove('parent-focused');
-            });
+        const fieldNames = ['cardNumber', 'cardExpiry', 'cardCvv'];
+        const fields = [];
+        fieldNames.forEach(fieldName => {
+          const formField = form.createField(fieldName, options);
+          fields.push({
+            formField: formField,
+            name: fieldName
           });
-          // update card brand
-          if (document.getElementById('card-brand-icon')) {
-            form.fields.cardNumber.on('change', evt => {
-              const cardBrand = evt.brand;
-              const icon = document.getElementById('card-brand-icon');
-              if (icon) {
-                switch (cardBrand) {
-                  case 'amex':
-                    icon.classList.value = 'fa-brands fa-cc-amex';
-                    break;
-                  case 'mastercard':
-                    icon.classList.value = 'fa-brands fa-cc-mastercard';
-                    break;
-                  case 'visa':
-                    icon.classList.value = 'fa-brands fa-cc-visa';
-                    break;
-                  case 'discover':
-                    icon.classList.value = 'fa-brands fa-cc-discover';
-                    break;
-                  case 'diners':
-                    icon.classList.value = 'fa-brands fa-cc-diners-club';
-                    break;
-                  default:
-                    icon.classList.value = 'fa-solid fa-credit-card';
+        });
+        const paymentElement = {
+          form,
+          mount: fieldIds => {
+            fields.forEach(field => {
+              const id = fieldIds[field.name];
+              field.formField.inject('#' + id);
+              field.formField.on('focus', evt => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.add('parent-focused');
+              });
+              field.formField.on('blur', evt => {
+                const parentDiv = document.getElementById(id);
+                if (parentDiv) parentDiv.classList.remove('parent-focused');
+              });
+            });
+            // update card brand
+            if (document.getElementById('card-brand-icon')) {
+              form.fields.cardNumber.on('change', evt => {
+                const cardBrand = evt.brand;
+                const icon = document.getElementById('card-brand-icon');
+                if (icon) {
+                  switch (cardBrand) {
+                    case 'amex':
+                      icon.classList.value = 'fa-brands fa-cc-amex';
+                      break;
+                    case 'mastercard':
+                      icon.classList.value = 'fa-brands fa-cc-mastercard';
+                      break;
+                    case 'visa':
+                      icon.classList.value = 'fa-brands fa-cc-visa';
+                      break;
+                    case 'discover':
+                      icon.classList.value = 'fa-brands fa-cc-discover';
+                      break;
+                    case 'diners':
+                      icon.classList.value = 'fa-brands fa-cc-diners-club';
+                      break;
+                    default:
+                      icon.classList.value = 'fa-solid fa-credit-card';
+                  }
                 }
-              }
+              });
+            }
+            form.build();
+          },
+          destroy: () => {
+            form.teardown(success => {
+              console.log('The component has been successfully unmounted:', success);
             });
           }
-          form.build();
-        },
-        destroy: () => {
-          form.teardown(success => {
-            console.log('The component has been successfully unmounted:', success);
-          });
-        }
+        };
+        this._elements[elementType] = paymentElement;
+        return paymentElement;
       };
-      this._elements[elementType] = paymentElement;
-      return paymentElement;
-    };
-    return createPromise();
+      return createPromise();
+    } else if (elementType === 'paymentRequestButton' && options && 'paymentRequest' in options) {
+      const createPromise = async () => {
+        const form = await this._dots.form({
+          payment_method_type: 'card'
+        });
+        var prButton = form.createField('paymentRequestButton', {
+          paymentRequest: options.paymentRequest
+        });
+        const paymentRequestButtonElement = {
+          form,
+          mount: selectorId => {
+            options.paymentRequest.canMakePayment().then(result => {
+              if (result) {
+                // Inject paymentRequestButton Form Field to the DOM
+                prButton.inject(selectorId);
+              } else {
+                const button = document.getElementById(selectorId);
+                if (button) button.style.display = 'none';
+              }
+            });
+            form.build();
+          },
+          destroy: () => {
+            form.teardown(success => {
+              console.log('The component has been successfully unmounted:', success);
+            });
+          }
+        };
+        this._elements[elementType] = paymentRequestButtonElement;
+        return paymentRequestButtonElement;
+      };
+      return createPromise();
+    } else {
+      return Promise.reject(new Error('Invalid type'));
+    }
   }
   update(options) {
     //to do
