@@ -53,7 +53,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.11", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.12", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
