@@ -3,9 +3,12 @@ import {
   DotsElements,
   DotsElementsOptions,
 } from './elements-group';
+import { PaymentRequest, PaymentRequestOptions } from './payment-request';
 import * as api from '../api';
 export interface Dots {
   elements(options?: DotsElementsOptions): DotsElements;
+
+  paymentRequest(options: PaymentRequestOptions): PaymentRequest;
 
   confirmCardPayment: ConfirmCardPayment;
   // createPaymentMethod: CreatePaymentMethod;
