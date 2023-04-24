@@ -56,7 +56,7 @@ var dotsjs = (function (exports) {
       return response.json();
     };
     dots.confirmCardPayment = confirmCardPayment;
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.10", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.11", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
