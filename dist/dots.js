@@ -57,7 +57,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.15", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.16", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
@@ -215,12 +215,17 @@ class Elements {
           form,
           mount: selectorId => {
             options.paymentRequest.canMakePayment().then(result => {
-              if (result) {
-                // Inject paymentRequestButton Form Field to the DOM
-                prButton.inject('#' + selectorId);
-              } else {
-                const button = document.getElementById(selectorId);
-                if (button) button.style.display = 'none';
+              try {
+                console.log(result);
+                if (result) {
+                  // Inject paymentRequestButton Form Field to the DOM
+                  prButton.inject('#' + selectorId);
+                } else {
+                  const button = document.getElementById(selectorId);
+                  if (button) button.style.display = 'none';
+                }
+              } catch (e) {
+                console.error(e);
               }
             });
             form.build();
