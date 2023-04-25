@@ -36,7 +36,7 @@ const dotsServerUrl = {
   sandbox: 'https://api.senddotssanbox.com/api',
   staging: 'https://api-staging.dots.dev/api',
   development:
-    'https://eca3-2600-1700-45a-e320-3829-a99a-aa5a-3087.ngrok-free.app/api',
+    '	https://a29a-2600-1700-45a-e320-3829-a99a-aa5a-3087.ngrok-free.app/api',
 };
 
 export const findScript = (): HTMLScriptElement | null => {
