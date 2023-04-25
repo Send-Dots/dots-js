@@ -35,8 +35,7 @@ const dotsServerUrl = {
   production: 'https://api.dots.dev/api',
   sandbox: 'https://api.senddotssanbox.com/api',
   staging: 'https://api-staging.dots.dev/api',
-  development:
-    '	https://a29a-2600-1700-45a-e320-3829-a99a-aa5a-3087.ngrok-free.app/api',
+  development: 'http://localhost:8080/api',
 };
 
 export const findScript = (): HTMLScriptElement | null => {
@@ -343,7 +342,7 @@ class Elements implements DotsElements {
             options.paymentRequest.canMakePayment().then((result) => {
               if (result) {
                 // Inject paymentRequestButton Form Field to the DOM
-                prButton.inject(selectorId);
+                prButton.inject('#' + selectorId);
               } else {
                 const button = document.getElementById(selectorId);
                 if (button) button.style.display = 'none';
