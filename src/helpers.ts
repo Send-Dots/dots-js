@@ -340,12 +340,17 @@ class Elements implements DotsElements {
           form,
           mount: (selectorId: string) => {
             options.paymentRequest.canMakePayment().then((result) => {
-              if (result) {
-                // Inject paymentRequestButton Form Field to the DOM
-                prButton.inject('#' + selectorId);
-              } else {
-                const button = document.getElementById(selectorId);
-                if (button) button.style.display = 'none';
+              try {
+                console.log(result);
+                if (result) {
+                  // Inject paymentRequestButton Form Field to the DOM
+                  prButton.inject('#' + selectorId);
+                } else {
+                  const button = document.getElementById(selectorId);
+                  if (button) button.style.display = 'none';
+                }
+              } catch (e) {
+                console.error(e);
               }
             });
 
