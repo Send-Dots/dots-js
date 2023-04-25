@@ -12,7 +12,7 @@
     "rimraf": "^4.1.2"
   },
   "name": "@dots.dev/dots-js",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "main": "dist/dots.js",
   "module": "dist/dots.esm.js",
   "types": "types/index.d.ts",
