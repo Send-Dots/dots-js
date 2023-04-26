@@ -36,7 +36,7 @@ export type CreatePaymentMethod = (
 export type ConfirmCardPayment = (
   client_secret: string,
   options: {
-    payment_method: api.PaymentMethod;
+    payment_method: api.PaymentMethod | string;
   }
 ) => Promise<any>;
 
