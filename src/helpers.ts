@@ -33,7 +33,7 @@ const EXISTING_SCRIPT_MESSAGE =
 
 const dotsServerUrl = {
   production: 'https://api.dots.dev/api',
-  sandbox: 'https://api.senddotssanbox.com/api',
+  sandbox: 'https://api.senddotssandbox.com/api',
   staging: 'https://api-staging.dots.dev/api',
   development: 'http://localhost:8080/api',
 };
