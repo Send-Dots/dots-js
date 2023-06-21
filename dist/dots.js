@@ -7,7 +7,7 @@ const id = 'dots-js-script';
 const EXISTING_SCRIPT_MESSAGE = 'loadDots.setLoadParameters was called but an existing Dots.js script already exists in the document; existing script parameters will be used';
 const dotsServerUrl = {
   production: 'https://api.dots.dev/api',
-  sandbox: 'https://api.senddotssanbox.com/api',
+  sandbox: 'https://api.senddotssandbox.com/api',
   staging: 'https://api-staging.dots.dev/api',
   development: 'http://localhost:8080/api'
 };
@@ -57,7 +57,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.17", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.18", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
