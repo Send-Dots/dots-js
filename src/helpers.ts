@@ -82,16 +82,47 @@ const registerWrapper = (
     client_secret: string,
     options: { payment_method: PaymentMethod | string }
   ) => {
-    const res = await dots.confirmPayment(client_secret, {
-      payment_method:
-        typeof options.payment_method === 'string'
-          ? options.payment_method
-          : {
-              type: 'card',
-              ...options.payment_method,
-              form: options.payment_method.element.form,
-            },
-    });
+    let res;
+    if (typeof options.payment_method != 'object') {
+      // using payment method so no need to wrap it
+      res = await dots.confirmPayment(client_secret, {
+        payment_method: options.payment_method,
+      });
+    } else {
+      const paymentMethodRes = await dots.createPaymentMethod({
+        type: 'card',
+        ...options.payment_method.billing_details,
+      });
+      console.log('paymentMethodRes', paymentMethodRes);
+
+      const paymentMethodId = paymentMethodRes['id'];
+
+      const clientSecret = paymentMethodRes['client_secret'];
+
+      const response = await fetch(
+        dotsServerUrl[args[1]] +
+          '/v2/payment-intents/attach_payment_method/' +
+          clientSecret,
+        {
+          method: 'PUT',
+          body: JSON.stringify({ payment_method_id: paymentMethodId }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + btoa(args[0] + ':'),
+          },
+        }
+      );
+
+      console.log('responseRes', response);
+      if (!response.ok) {
+        throw new Error('Failed to attach payment method to customer');
+      }
+
+      res = await dots.confirmPayment(client_secret, {
+        payment_method: paymentMethodId,
+      });
+      console.log('confirmPaymentRes', res);
+    }
 
     const clientSecret = res['client_secret'];
 
