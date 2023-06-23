@@ -83,19 +83,17 @@ const registerWrapper = (
     options: { payment_method: PaymentMethod | string }
   ) => {
     let res;
-    if (typeof options.payment_method != 'object') {
-      // using payment method so no need to wrap it
-      res = await dots.confirmPayment(client_secret, {
-        payment_method: options.payment_method,
-      });
-    } else {
+    let paymentMethodId: string;
+    if (typeof options.payment_method === 'object') {
+      console.log('options.payment_method', options.payment_method);
       const paymentMethodRes = await dots.createPaymentMethod({
         type: 'card',
-        ...options.payment_method.billing_details,
+        form: options.payment_method.element.form,
+        billing_details: options.payment_method.billing_details,
       });
       console.log('paymentMethodRes', paymentMethodRes);
 
-      const paymentMethodId = paymentMethodRes['id'];
+      paymentMethodId = paymentMethodRes['id'];
 
       const clientSecret = paymentMethodRes['client_secret'];
 
@@ -117,12 +115,14 @@ const registerWrapper = (
       if (!response.ok) {
         throw new Error('Failed to attach payment method to customer');
       }
-
-      res = await dots.confirmPayment(client_secret, {
-        payment_method: paymentMethodId,
-      });
-      console.log('confirmPaymentRes', res);
+    } else {
+      paymentMethodId = options.payment_method;
     }
+
+    res = await dots.confirmPayment(client_secret, {
+      payment_method: paymentMethodId,
+    });
+    console.log('confirmPaymentRes', res);
 
     const clientSecret = res['client_secret'];
 

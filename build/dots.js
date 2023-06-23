@@ -35,13 +35,37 @@ var dotsjs = (function (exports) {
     }
     dots.elements = () => new Elements(dots);
     const confirmCardPayment = async (client_secret, options) => {
-      const res = await dots.confirmPayment(client_secret, {
-        payment_method: typeof options.payment_method === 'string' ? options.payment_method : {
+      let res;
+      let paymentMethodId;
+      if (typeof options.payment_method === 'object') {
+        const paymentMethodRes = await dots.createPaymentMethod({
           type: 'card',
-          ...options.payment_method,
-          form: options.payment_method.element.form
+          ...options.payment_method.billing_details
+        });
+        console.log('paymentMethodRes', paymentMethodRes);
+        paymentMethodId = paymentMethodRes['id'];
+        const clientSecret = paymentMethodRes['client_secret'];
+        const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/attach_payment_method/' + clientSecret, {
+          method: 'PUT',
+          body: JSON.stringify({
+            payment_method_id: paymentMethodId
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + btoa(args[0] + ':')
+          }
+        });
+        console.log('responseRes', response);
+        if (!response.ok) {
+          throw new Error('Failed to attach payment method to customer');
         }
+      } else {
+        paymentMethodId = options.payment_method;
+      }
+      res = await dots.confirmPayment(client_secret, {
+        payment_method: paymentMethodId
       });
+      console.log('confirmPaymentRes', res);
       const clientSecret = res['client_secret'];
       const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange/' + clientSecret, {
         method: 'GET',
@@ -56,7 +80,7 @@ var dotsjs = (function (exports) {
       return response.json();
     };
     dots.confirmCardPayment = confirmCardPayment;
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.18", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.19", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {

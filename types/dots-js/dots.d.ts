@@ -11,25 +11,14 @@ export interface Dots {
   paymentRequest(options: PaymentRequestOptions): PaymentRequest;
 
   confirmCardPayment: ConfirmCardPayment;
+
   // createPaymentMethod: CreatePaymentMethod;
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
 export type CreatePaymentMethod = (
   client_secret: string,
   options: {
-    payment_method: {
-      billing_details: {
-        name?: string;
-        email?: string;
-        address: {
-          country: string;
-          zip: string;
-          street?: string;
-          city?: string;
-          state?: string;
-        };
-      };
-    };
+    payment_method: api.PaymentMethod;
   }
 ) => Promise<any>;
 
