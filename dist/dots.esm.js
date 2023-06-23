@@ -35,9 +35,11 @@ const registerWrapper = (dots, args) => {
     let res;
     let paymentMethodId;
     if (typeof options.payment_method === 'object') {
+      console.log('options.payment_method', options.payment_method);
       const paymentMethodRes = await dots.createPaymentMethod({
         type: 'card',
-        ...options.payment_method.billing_details
+        form: options.payment_method.element.form,
+        billing_details: options.payment_method.billing_details
       });
       console.log('paymentMethodRes', paymentMethodRes);
       paymentMethodId = paymentMethodRes['id'];
@@ -77,7 +79,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.19", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.20", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {

@@ -95,12 +95,10 @@ const registerWrapper = (
 
       paymentMethodId = paymentMethodRes['id'];
 
-      const clientSecret = paymentMethodRes['client_secret'];
-
       const response = await fetch(
         dotsServerUrl[args[1]] +
           '/v2/payment-intents/attach_payment_method/' +
-          clientSecret,
+          client_secret,
         {
           method: 'PUT',
           body: JSON.stringify({ payment_method_id: paymentMethodId }),
