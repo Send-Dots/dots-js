@@ -47,8 +47,7 @@ const registerWrapper = (dots, args) => {
       });
       console.log('paymentMethodRes', paymentMethodRes);
       paymentMethodId = paymentMethodRes['id'];
-      const clientSecret = paymentMethodRes['client_secret'];
-      const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/attach_payment_method/' + clientSecret, {
+      const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/attach_payment_method/' + client_secret, {
         method: 'PUT',
         body: JSON.stringify({
           payment_method_id: paymentMethodId
@@ -83,7 +82,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.20", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.21", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {

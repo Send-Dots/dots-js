@@ -85,13 +85,11 @@ const registerWrapper = (
     let res;
     let paymentMethodId: string;
     if (typeof options.payment_method === 'object') {
-      console.log('options.payment_method', options.payment_method);
       const paymentMethodRes = await dots.createPaymentMethod({
         type: 'card',
         form: options.payment_method.element.form,
         billing_details: options.payment_method.billing_details,
       });
-      console.log('paymentMethodRes', paymentMethodRes);
 
       paymentMethodId = paymentMethodRes['id'];
 
@@ -109,18 +107,35 @@ const registerWrapper = (
         }
       );
 
-      console.log('responseRes', response);
       if (!response.ok) {
         throw new Error('Failed to attach payment method to customer');
       }
     } else {
-      paymentMethodId = options.payment_method;
+      const response = await fetch(
+        dotsServerUrl[args[1]] +
+          '/v2/payment-intents/exchange_payment_method/' +
+          client_secret,
+        {
+          method: 'POST',
+          body: JSON.stringify({ payment_method_id: options.payment_method }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + btoa(args[0] + ':'),
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to exchange payment method id for provider id');
+      }
+      const body = await response.json();
+
+      paymentMethodId = body['provider_id'];
     }
 
     res = await dots.confirmPayment(client_secret, {
       payment_method: paymentMethodId,
     });
-    console.log('confirmPaymentRes', res);
 
     const clientSecret = res['client_secret'];
 
@@ -370,7 +385,6 @@ class Elements implements DotsElements {
           mount: (selectorId: string) => {
             options.paymentRequest.canMakePayment().then((result) => {
               try {
-                console.log(result);
                 if (result) {
                   // Inject paymentRequestButton Form Field to the DOM
                   prButton.inject('#' + selectorId);
