@@ -174,6 +174,7 @@ const registerWrapper = (
       },
       body: JSON.stringify({ provider_id: providerId }),
     });
+
     if (!response.ok) {
       throw new Error('Failed to add payment method');
     }

@@ -12,15 +12,13 @@ export interface Dots {
 
   confirmCardPayment: ConfirmCardPayment;
 
-  // createPaymentMethod: CreatePaymentMethod;
+  addPaymentMethod: CreatePaymentMethod;
+
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
-export type CreatePaymentMethod = (
-  client_secret: string,
-  options: {
-    payment_method: api.PaymentMethod;
-  }
-) => Promise<any>;
+export type CreatePaymentMethod = (options: {
+  payment_method: api.PaymentMethod;
+}) => Promise<any>;
 
 export type ConfirmCardPayment = (
   client_secret: string,
