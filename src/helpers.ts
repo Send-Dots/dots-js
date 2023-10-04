@@ -95,7 +95,7 @@ const registerWrapper = (
 
       const response = await fetch(
         dotsServerUrl[args[1]] +
-          '/v2/payment-intents/attach_payment_method/' +
+          '/payment_intent/attach_payment_method/' +
           client_secret,
         {
           method: 'PUT',
@@ -112,12 +112,10 @@ const registerWrapper = (
       }
     } else {
       const response = await fetch(
-        dotsServerUrl[args[1]] +
-          '/v2/payment-intents/exchange_payment_method/' +
-          client_secret,
+        dotsServerUrl[args[1]] + '/payment_method/exchange' + client_secret,
         {
           method: 'POST',
-          body: JSON.stringify({ payment_method_id: options.payment_method }),
+          body: JSON.stringify({ provider_id: options.payment_method }),
           headers: {
             'Content-Type': 'application/json',
             Authorization: 'Basic ' + btoa(args[0] + ':'),
@@ -140,7 +138,7 @@ const registerWrapper = (
     const clientSecret = res['client_secret'];
 
     const response = await fetch(
-      dotsServerUrl[args[1]] + '/v2/payment-intents/exchange/' + clientSecret,
+      dotsServerUrl[args[1]] + '/payment_intent/exchange/' + clientSecret,
       {
         method: 'GET',
         headers: {
@@ -156,6 +154,34 @@ const registerWrapper = (
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
+
+  const addPaymentMethod = async (options: {
+    payment_method: PaymentMethod;
+  }) => {
+    const paymentMethodRes = await dots.createPaymentMethod({
+      type: 'card',
+      form: options.payment_method.element.form,
+      billing_details: options.payment_method.billing_details,
+    });
+
+    const providerId = paymentMethodRes['id'];
+
+    const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(args[0] + ':'),
+      },
+      body: JSON.stringify({ provider_id: providerId }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to add payment method');
+    }
+
+    return response.json();
+  };
+
+  dots.addPaymentMethod = addPaymentMethod;
 
   //dots._registerWrapper({ name: 'dots-js', version: _VERSION, startTime });
 };
