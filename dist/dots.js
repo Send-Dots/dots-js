@@ -45,7 +45,7 @@ const registerWrapper = (dots, args) => {
         billing_details: options.payment_method.billing_details
       });
       paymentMethodId = paymentMethodRes['id'];
-      const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/attach_payment_method/' + client_secret, {
+      const response = await fetch(dotsServerUrl[args[1]] + '/payment_intent/attach_payment_method/' + client_secret, {
         method: 'PUT',
         body: JSON.stringify({
           payment_method_id: paymentMethodId
@@ -59,10 +59,10 @@ const registerWrapper = (dots, args) => {
         throw new Error('Failed to attach payment method to customer');
       }
     } else {
-      const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange_payment_method/' + client_secret, {
+      const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/exchange' + client_secret, {
         method: 'POST',
         body: JSON.stringify({
-          payment_method_id: options.payment_method
+          provider_id: options.payment_method
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const registerWrapper = (dots, args) => {
       payment_method: paymentMethodId
     });
     const clientSecret = res['client_secret'];
-    const response = await fetch(dotsServerUrl[args[1]] + '/v2/payment-intents/exchange/' + clientSecret, {
+    const response = await fetch(dotsServerUrl[args[1]] + '/payment_intent/exchange/' + clientSecret, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +92,30 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.confirmCardPayment = confirmCardPayment;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.22", startTime });
+  const addPaymentMethod = async options => {
+    const paymentMethodRes = await dots.createPaymentMethod({
+      type: 'card',
+      form: options.payment_method.element.form,
+      billing_details: options.payment_method.billing_details
+    });
+    const providerId = paymentMethodRes['id'];
+    const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa(args[0] + ':')
+      },
+      body: JSON.stringify({
+        provider_id: providerId
+      })
+    });
+    if (!response.ok) {
+      throw new Error('Failed to add payment method');
+    }
+    return response.json();
+  };
+  dots.addPaymentMethod = addPaymentMethod;
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.23", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
