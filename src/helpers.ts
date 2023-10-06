@@ -257,7 +257,7 @@ export const initDots = async (
   const environment = args[1];
 
   const resposne = await fetch(
-    dotsServerUrl[environment] + '/tilled-public-account-information',
+    dotsServerUrl[environment] + '/api/tilled-public-account-information',
     {
       method: 'GET',
       headers: {
