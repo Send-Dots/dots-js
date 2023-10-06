@@ -229,6 +229,7 @@ export interface Style {
   lineWeight?: string;
   transition?: string;
   colorPrimaryText?: string;
+  colorIcon?: string;
 }
 
 export interface Styles {

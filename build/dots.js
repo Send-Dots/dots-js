@@ -114,7 +114,7 @@ var dotsjs = (function (exports) {
       return response.json();
     };
     dots.addPaymentMethod = addPaymentMethod;
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.25", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.26", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
@@ -165,7 +165,7 @@ var dotsjs = (function (exports) {
       return null;
     }
     const environment = args[1];
-    const resposne = await fetch(dotsServerUrl[environment] + '/tilled-public-account-information', {
+    const resposne = await fetch(dotsServerUrl[environment] + '/api/tilled-public-account-information', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
