@@ -32,10 +32,10 @@ const EXISTING_SCRIPT_MESSAGE =
   'loadDots.setLoadParameters was called but an existing Dots.js script already exists in the document; existing script parameters will be used';
 
 const dotsServerUrl = {
-  production: 'https://api.dots.dev/api',
-  sandbox: 'https://api.senddotssandbox.com/api',
-  staging: 'https://api-staging.dots.dev/api',
-  development: 'http://localhost:8080/api',
+  production: 'https://api.dots.dev',
+  sandbox: 'https://api.senddotssandbox.com',
+  staging: 'https://api-staging.dots.dev',
+  development: 'http://localhost:8080',
 };
 
 export const findScript = (): HTMLScriptElement | null => {
