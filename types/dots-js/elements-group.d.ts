@@ -228,6 +228,7 @@ export interface Style {
   fontStyle?: string;
   lineWeight?: string;
   transition?: string;
+  colorPrimaryText?: string;
 }
 
 export interface Styles {
@@ -235,6 +236,8 @@ export interface Styles {
   invalid?: Style;
   valid?: Style;
 }
+
+//this is some old stuff, see the Styles interface above for the one that is actually being used
 
 export interface Appearance {
   disableAnimations?: boolean;
