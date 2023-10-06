@@ -111,7 +111,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.addPaymentMethod = addPaymentMethod;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.26", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.27", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
