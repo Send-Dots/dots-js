@@ -156,16 +156,20 @@ const registerWrapper = (
   dots.confirmCardPayment = confirmCardPayment;
 
   const addPaymentMethod = async (options: {
-    payment_method: PaymentMethod;
+    payment_method: PaymentMethod | string;
   }) => {
-    const paymentMethodRes = await dots.createPaymentMethod({
-      type: 'card',
-      form: options.payment_method.element.form,
-      billing_details: options.payment_method.billing_details,
-    });
+    let providerId: string;
+    if (typeof options.payment_method === 'object') {
+      const paymentMethodRes = await dots.createPaymentMethod({
+        type: 'card',
+        form: options.payment_method.element.form,
+        billing_details: options.payment_method.billing_details,
+      });
 
-    const providerId = paymentMethodRes['id'];
-
+      providerId = paymentMethodRes['id'];
+    } else {
+      providerId = options.payment_method;
+    }
     const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/', {
       method: 'POST',
       headers: {
@@ -178,7 +182,6 @@ const registerWrapper = (
     if (!response.ok) {
       throw new Error('Failed to add payment method');
     }
-
     return response.json();
   };
 
