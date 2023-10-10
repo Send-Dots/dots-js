@@ -93,12 +93,17 @@ const registerWrapper = (dots, args) => {
   };
   dots.confirmCardPayment = confirmCardPayment;
   const addPaymentMethod = async options => {
-    const paymentMethodRes = await dots.createPaymentMethod({
-      type: 'card',
-      form: options.payment_method.element.form,
-      billing_details: options.payment_method.billing_details
-    });
-    const providerId = paymentMethodRes['id'];
+    let providerId;
+    if (typeof options.payment_method === 'object') {
+      const paymentMethodRes = await dots.createPaymentMethod({
+        type: 'card',
+        form: options.payment_method.element.form,
+        billing_details: options.payment_method.billing_details
+      });
+      providerId = paymentMethodRes['id'];
+    } else {
+      providerId = options.payment_method;
+    }
     const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/', {
       method: 'POST',
       headers: {
@@ -115,7 +120,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.addPaymentMethod = addPaymentMethod;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.27", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.28", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
