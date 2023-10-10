@@ -17,7 +17,7 @@ export interface Dots {
   form(options: { payment_method_type: string; options?: any }): TilledForm;
 }
 export type CreatePaymentMethod = (options: {
-  payment_method: api.PaymentMethod;
+  payment_method: api.PaymentMethod | string;
 }) => Promise<any>;
 
 export type ConfirmCardPayment = (
