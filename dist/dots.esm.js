@@ -55,7 +55,7 @@ const registerWrapper = (dots, args) => {
         throw new Error('Failed to attach payment method to customer');
       }
     } else {
-      const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/exchange' + client_secret, {
+      const response = await fetch(dotsServerUrl[args[1]] + '/payment_method/exchange/' + client_secret, {
         method: 'POST',
         body: JSON.stringify({
           provider_id: options.payment_method
@@ -116,7 +116,7 @@ const registerWrapper = (dots, args) => {
     return response.json();
   };
   dots.addPaymentMethod = addPaymentMethod;
-  //dots._registerWrapper({ name: 'dots-js', version: "1.1.29", startTime });
+  //dots._registerWrapper({ name: 'dots-js', version: "1.1.30", startTime });
 };
 let tilledPromise = null;
 const loadScript = params => {
