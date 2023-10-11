@@ -112,7 +112,7 @@ const registerWrapper = (
       }
     } else {
       const response = await fetch(
-        dotsServerUrl[args[1]] + '/payment_method/exchange' + client_secret,
+        dotsServerUrl[args[1]] + '/payment_method/exchange/' + client_secret,
         {
           method: 'POST',
           body: JSON.stringify({ provider_id: options.payment_method }),
