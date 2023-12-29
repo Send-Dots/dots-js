@@ -230,6 +230,7 @@ export interface Style {
   transition?: string;
   colorPrimaryText?: string;
   colorIcon?: string;
+  colorInputBackground?: string;
 }
 
 export interface Styles {
