@@ -119,7 +119,7 @@ var dotsjs = (function (exports) {
       return response.json();
     };
     dots.addPaymentMethod = addPaymentMethod;
-    //dots._registerWrapper({ name: 'dots-js', version: "1.1.30", startTime });
+    //dots._registerWrapper({ name: 'dots-js', version: "1.1.31", startTime });
   };
   let tilledPromise = null;
   const loadScript = params => {
